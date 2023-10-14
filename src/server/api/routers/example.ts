@@ -1,16 +1,11 @@
 import { z } from "zod";
-import * as fs from "fs";
-import * as path from "path";
 import { parse } from "csv-parse";
+import axios from "axios";
+
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { Word } from "~/server/types";
 
-type Word = {
-  pinyin: string;
-  noTone: string;
-  character: string;
-  meaning: string;
-};
 
 export const exampleRouter = createTRPCRouter({
   hello: publicProcedure
@@ -23,33 +18,31 @@ export const exampleRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.db.example.findMany();
   }),
-  randomWord: publicProcedure.query(({}) => {
+  randomWord: publicProcedure.query(async ({}) => {
 
+    const response = await axios.get("https://mandarin.pablocawichii.com/pinyin.csv",{ responseType: 'blob',});
+        
     const headers = ["pinyin", "noTone", "character", "meaning"];
 
-    // const fileContent = fs.readFileSync("", { encoding: "utf-8" });
+    // const fileContent = fs.readFileSync(csvFilePath, { encoding: "utf-8" });
 
-    // const promise = await new Promise<Word[]>((res, rej) => {
-    //   parse(
-    //     fileContent,
-    //     {
-    //       delimiter: ",",
-    //       columns: headers,
-    //     },
-    //     (error, result: Word[]) => {
-    //       if (error) {
-    //         rej(error);
-    //       }
-    //       res(result);
-    //     },
-    //   );
-    // });
+    const promise = await new Promise<Word[]>((res, rej) => {
+      parse(
+        response.data as string,
+        {
+          delimiter: ",",
+          columns: headers,
+        },
+        (error, result: Word[]) => {
+          if (error) {
+            rej(error);
+          }
+          res(result);
+        },
+      );
+    });
 
     
-
-    // return promise[Math.floor(Math.random() * promise.length)];
-    return {
-      character: ""
-    };
+    return promise[Math.floor(Math.random() * promise.length)];
   }),
 });
