@@ -2,10 +2,8 @@ import { z } from "zod";
 import { parse } from "csv-parse";
 import axios from "axios";
 
-
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { Word } from "~/server/types";
-
+import { type Word } from "~/server/types";
 
 export const exampleRouter = createTRPCRouter({
   hello: publicProcedure
@@ -19,9 +17,11 @@ export const exampleRouter = createTRPCRouter({
     return ctx.db.example.findMany();
   }),
   randomWord: publicProcedure.query(async ({}) => {
+    const response = await axios.get(
+      "https://mandarin.pablocawichii.com/pinyin.csv",
+      { responseType: "blob" },
+    );
 
-    const response = await axios.get("https://mandarin.pablocawichii.com/pinyin.csv",{ responseType: 'blob',});
-        
     const headers = ["pinyin", "noTone", "character", "meaning"];
 
     // const fileContent = fs.readFileSync(csvFilePath, { encoding: "utf-8" });
@@ -32,6 +32,7 @@ export const exampleRouter = createTRPCRouter({
         {
           delimiter: ",",
           columns: headers,
+          from_line: 2,
         },
         (error, result: Word[]) => {
           if (error) {
@@ -42,7 +43,6 @@ export const exampleRouter = createTRPCRouter({
       );
     });
 
-    
     return promise[Math.floor(Math.random() * promise.length)];
   }),
 });

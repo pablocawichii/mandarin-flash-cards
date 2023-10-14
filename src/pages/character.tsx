@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { ShowCharacter } from "~/components/showCharacter";
 import { ShowPinyin } from "~/components/showPinyin";
 import { api } from "~/utils/api";
@@ -21,6 +22,12 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16  ">
           <div className="flex w-[48rem] flex-col gap-12 overflow-hidden rounded shadow-lg ">
+            <Link
+              className=" w-[6rem] px-8 py-4 text-sky-700 hover:bg-sky-700/20"
+              href="/"
+            >
+              <h3 className="text-2xl font-bold">{"<-"}</h3>
+            </Link>
             {isFetching || !data ? (
               <div className="flex flex-col items-center gap-4">
                 <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
