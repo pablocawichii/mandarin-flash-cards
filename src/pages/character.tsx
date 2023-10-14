@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { ShowCharacter } from "~/components/showCharacter";
+import { ShowMeaning } from "~/components/showMeaning";
 import { ShowPinyin } from "~/components/showPinyin";
 import { api } from "~/utils/api";
 
@@ -41,6 +42,7 @@ export default function Home() {
                 </h1>
                 <ShowCharacter word={data} />
                 <ShowPinyin word={data} />
+                <ShowMeaning word={data} />
               </div>
             )}
             <div
