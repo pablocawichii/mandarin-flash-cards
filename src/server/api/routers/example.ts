@@ -22,7 +22,7 @@ export const exampleRouter = createTRPCRouter({
       { responseType: "blob" },
     );
 
-    const headers = ["pinyin", "noTone", "character", "meaning"];
+    const headers = ["pinyin", "noTone", "character", "meaning", "correct"];
 
     // const fileContent = fs.readFileSync(csvFilePath, { encoding: "utf-8" });
 
